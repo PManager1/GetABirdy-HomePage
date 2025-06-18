@@ -131,17 +131,17 @@
     <div class="max-w-md w-full mx-auto">
       <div class="glassmorphic rounded-2xl shadow-2xl p-8 sm:p-10">
         <h2 class="text-3xl font-extrabold text-blue-900 text-center mb-6">Enter your OTP Code</h2>
-        <form id="signinForm" class="space-y-8">
+        <form id="signinForm" on:submit={submitForm} class="space-y-8">
           <!-- Phone Sign In -->
           <div>
            
 
             <!-- ✅ Clean version of the phone input -->
           <div>
-            <label for="phone" class="block text-gray-700 font-semibold mb-2">Phone Number</label>
+            <label for="otpCode" class="block text-gray-700 font-semibold mb-2">OTP code :</label>
             <input
-              type="tel"
-              id="phone"
+
+              id="otpCode"
               required
               maxlength="12"
               placeholder="0000"
@@ -240,12 +240,55 @@
 
   <!-- JavaScript -->
   <script>
+
+       export let phone;
+      console.log('phone in component:', phone);
+
+      // new start 
+
+ async function submitForm(event) {
+      console.log ( '250----- func  calling submit form ');
+    event.preventDefault();
+    const otpCode = event.target.otpCode.value;
+
+    if (!phone) {
+      alert('Phone number missing from URL!');
+      return;
+    }
+
+    try {
+      const res = await fetch('https://xmkvtmgtwb.execute-api.us-east-1.amazonaws.com/dev/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phoneNumber: phone, otp: otpCode }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.message === 'OTP sent successfully') {
+        alert(data.message || 'Sign-in successful!');
+      } else {
+        alert(data.message || 'Something went wrong.');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Something went wrong. Please try again.');
+    }
+  }
+      // new end 
+
+
     // Debugging: Confirm elements are in DOM
     document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+
+      phone = params.get('phone');  // assign here without const
+      console.log('✅ Phone from URL:', phone);
+
+// 
       const signInButton = document.getElementById('signinButton');
-      const phoneInput = document.getElementById('phone');
+      const otpCodeInput = document.getElementById('otpCode');
       console.log('Sign In Button:', signInButton);
-      console.log('Phone Input:', phoneInput);
+      console.log('otpCodeInput Input:', otpCodeInput);
     });
 
     // Mobile Menu Toggle
@@ -255,29 +298,36 @@
     });
 
     // Phone Number Formatting
-    document.getElementById('phone').addEventListener('input', function(e) {
+    document.getElementById('otpCode').addEventListener('input', function(e) {
       let value = e.target.value.replace(/\D/g, '');
-      if (value.length > 3 && value.length <= 6) {
-        value = value.slice(0, 3) + '-' + value.slice(3);
+      if (value.length > 4 && value.length <= 6) {
+        value = value.slice(0, 4) + '-' + value.slice(3);
       } else if (value.length > 6) {
-        value = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6, 10);
+        value = value.slice(0, 4) + '-' + value.slice(4, 6) + '-' + value.slice(6, 10);
       }
       e.target.value = value;
     });
 
 
-
+   
     // Form Submission
     document.getElementById('signinForm').addEventListener('submit', async (e) => {
+      console.log(' subitting signin form');
       e.preventDefault();
-      const phone = document.getElementById('phone').value;
+      
+      const otpCode = document.getElementById('otpCode').value;
+
+      if (!phone) {
+          alert('Phone number missing from URL!');
+        }
+
       try {
         const res = await fetch('https://xmkvtmgtwb.execute-api.us-east-1.amazonaws.com/dev/auth/verify-otp', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ phoneNumber: phone }),
+          body: JSON.stringify({ phoneNumber: phone, otp: otpCode }),
         });
         const data = await res.json();
 
@@ -285,8 +335,7 @@
          if (res.ok && data.message === 'OTP sent successfully') {
         // alert(data.message);
         alert(data.message || 'Sign-in successful!');
-        goto('/verify-otp'); // 👈 Route to OTP screen which isn't working
-        window.location.href = '/verify-otp'; // 👈 Route to OTP screen
+     
       } else {
         alert(data.message || 'Something went wrong.');
       }
@@ -338,5 +387,7 @@
       e.preventDefault();
     });
   </script>
+
+
 </body>
 </html>
