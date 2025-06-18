@@ -288,12 +288,15 @@
         });
         const data = await res.json();
 
+          const encodedPhone = '123';
         //  if (res.ok && data.message === 'OTP sent successfully') {
           if (data.message?.includes('OTP sent successfully')) {
         // alert(data.message);
-        alert(data.message || 'Sign-in successful!');
+        // alert(data.message || 'Sign-in successful!');
         // goto('/verify-otp'); // 👈 Route to OTP screen which isn't working
-        window.location.href = '/verify-otp'; // 👈 Route to OTP screen
+        // window.location.href = '/verify-otp'; // 👈 Route to OTP screen
+
+           window.location.href =  `/verify-otp?phone=${phone}`;
       } else {
         alert(data.message || 'Something went wrong.');
       }
