@@ -272,7 +272,7 @@
       e.preventDefault();
       const phone = document.getElementById('phone').value;
       try {
-        const res = await fetch('https://xmkvtmgtwb.execute-api.us-east-1.amazonaws.com/dev/auth/send-otp', {
+        const res = await fetch('https://xmkvtmgtwb.execute-api.us-east-1.amazonaws.com/dev/auth/verify-otp', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
