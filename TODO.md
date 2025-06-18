@@ -8,13 +8,5 @@ make the compare page work.
 /clients 
 
 When user goes from sendOtp  to verify top  it needs to send phoenno via the router. 
----- 
-login page : remove other auth options like facebook etc. 
-verify-otp  : do same as above 
------ 
-
-/login 
-show loading screen when makign backend code
-
 
 
