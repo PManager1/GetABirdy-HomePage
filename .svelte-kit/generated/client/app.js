@@ -19,9 +19,9 @@ export const dictionary = {
 		"/about": [3],
 		"/clients": [4],
 		"/compare": [5],
-		"/drivers": [6],
-		"/get-handle": [7],
-		"/login": [8]
+		"/get-handle": [6],
+		"/login": [7],
+		"/verify-otp": [8]
 	};
 
 export const hooks = {

@@ -130,31 +130,24 @@
   <section class="min-h-screen flex items-center justify-center py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full mx-auto">
       <div class="glassmorphic rounded-2xl shadow-2xl p-8 sm:p-10">
-        <h2 class="text-3xl font-extrabold text-blue-900 text-center mb-6">Sign In to Birdy</h2>
+        <h2 class="text-3xl font-extrabold text-blue-900 text-center mb-6">Enter your OTP Code</h2>
         <form id="signinForm" class="space-y-8">
           <!-- Phone Sign In -->
           <div>
-            <!-- <label for="phone" class="block text-gray-600 font-semibold mb-2 text-high-contrast">Phone Number</label> -->
-            <!-- <input type="tel" id="phone" required class="input-focus w-full rounded-full focus:outline-none focus:ring-2 focus:ring-purple-700 transition-all duration-300 hover:border-purple-300 placeholder-gray-500" placeholder="123-456-7890" maxlength="12"> -->
-              <!-- <input
+           
+
+            <!-- ✅ Clean version of the phone input -->
+          <div>
+            <label for="phone" class="block text-gray-700 font-semibold mb-2">Phone Number</label>
+            <input
               type="tel"
               id="phone"
               required
-              class="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-700 transition-all duration-300 hover:border-purple-300 placeholder-gray-700 bg-gray-100 text-blue-900"
-            /> -->
-
-            <!-- ✅ Clean version of the phone input -->
-<div>
-  <label for="phone" class="block text-gray-700 font-semibold mb-2">Phone Number</label>
-  <input
-    type="tel"
-    id="phone"
-    required
-    maxlength="12"
-    placeholder="123-456-7890"
-    class="w-full px-4 py-3 border border-gray-300 rounded-full text-black bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-gray-400"
-  />
-</div>
+              maxlength="12"
+              placeholder="0000"
+              class="w-full px-4 py-3 border border-gray-300 rounded-full text-black bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-gray-400"
+            />
+          </div>
 
 
             <p class="text-sm text-gray-600 mt-2">By proceeding, you consent to get calls or text messages for OTP verification.</p>
@@ -288,11 +281,11 @@
         });
         const data = await res.json();
 
-        //  if (res.ok && data.message === 'OTP sent successfully') {
-          if (data.message?.includes('OTP sent successfully')) {
+
+         if (res.ok && data.message === 'OTP sent successfully') {
         // alert(data.message);
         alert(data.message || 'Sign-in successful!');
-        // goto('/verify-otp'); // 👈 Route to OTP screen which isn't working
+        goto('/verify-otp'); // 👈 Route to OTP screen which isn't working
         window.location.href = '/verify-otp'; // 👈 Route to OTP screen
       } else {
         alert(data.message || 'Something went wrong.');
