@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Birdy - Compare Earnings</title>
+
+   <link rel="icon" href="https://getbirdy.co/static/logo/icon.png" type="image/png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Preload Nunito Fonts -->
+  <link rel="preload" href="/themes/fonts/Nunito/Nunito-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous" />
+  <link rel="preload" href="/themes/fonts/Nunito/Nunito-Bold.ttf" as="font" type="font/ttf" crossorigin="anonymous" />
+  <link rel="preload" href="/themes/fonts/Nunito/Nunito-BoldItalic.ttf" as="font" type="font/ttf" crossorigin="anonymous" />
+  <link rel="preload" href="/themes/fonts/Nunito/Nunito-Italic.ttf" as="font" type="font/ttf" crossorigin="anonymous" />
+  <link rel="preload" href="/themes/fonts/Nunito/Nunito-Light.ttf" as="font" type="font/ttf" crossorigin="anonymous" />
+  <link rel="preload" href="/themes/fonts/Nunito/Nunito-LightItalic.ttf" as="font" type="font/ttf" crossorigin="anonymous" />
+  <link rel="preload" href="/themes/fonts/Nunito/Nunito-ExtraBold.ttf" as="font" type="font/ttf" crossorigin="anonymous" />
+  <link rel="preload" href="/themes/fonts/Nunito/Nunito-ExtraBoldItalic.ttf" as="font" type="font/ttf" crossorigin="anonymous" />
+  <link rel="preload" href="/themes/fonts/Nunito/Nunito-ExtraLight.ttf" as="font" type="font/ttf" crossorigin="anonymous" />
+  <link rel="preload" href="/themes/fonts/Nunito/Nunito-ExtraLightItalic.ttf" as="font" type="font/ttf" crossorigin="anonymous" />
+  <link rel="preload" href="/themes/fonts/Nunito/Nunito-SemiBold.ttf" as="font" type="font/ttf" crossorigin="anonymous" />
+  <link rel="preload" href="/themes/fonts/Nunito/Nunito-SemiBoldItalic.ttf" as="font" type="font/ttf" crossorigin="anonymous" />
+
+  <style>
+    @font-face {
+      font-family: 'Nunito';
+      src: url('/themes/fonts/Nunito/Nunito-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Nunito';
+      src: url('/themes/fonts/Nunito/Nunito-Bold.ttf') format('truetype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Nunito';
+      src: url('/themes/fonts/Nunito/Nunito-BoldItalic.ttf') format('truetype');
+      font-weight: 700;
+      font-style: italic;
+    }
+    @font-face {
+      font-family: 'Nunito';
+      src: url('/themes/fonts/Nunito/Nunito-Italic.ttf') format('truetype');
+      font-weight: 400;
+      font-style: italic;
+    }
+    @font-face {
+      font-family: 'Nunito';
+      src: url('/themes/fonts/Nunito/Nunito-Light.ttf') format('truetype');
+      font-weight: 300;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Nunito';
+      src: url('/themes/fonts/Nunito/Nunito-LightItalic.ttf') format('truetype');
+      font-weight: 300;
+      font-style: italic;
+    }
+    @font-face {
+      font-family: 'Nunito';
+      src: url('/themes/fonts/Nunito/Nunito-ExtraBold.ttf') format('truetype');
+      font-weight: 800;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Nunito';
+      src: url('/themes/fonts/Nunito/Nunito-ExtraBoldItalic.ttf') format('truetype');
+      font-weight: 800;
+      font-style: italic;
+    }
+    @font-face {
+      font-family: 'Nunito';
+      src: url('/themes/fonts/Nunito/Nunito-ExtraLight.ttf') format('truetype');
+      font-weight: 200;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Nunito';
+      src: url('/themes/fonts/Nunito/Nunito-ExtraLightItalic.ttf') format('truetype');
+      font-weight: 200;
+      font-style: italic;
+    }
+    @font-face {
+      font-family: 'Nunito';
+      src: url('/themes/fonts/Nunito/Nunito-SemiBold.ttf') format('truetype');
+      font-weight: 600;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Nunito';
+      src: url('/themes/fonts/Nunito/Nunito-SemiBoldItalic.ttf') format('truetype');
+      font-weight: 600;
+      font-style: italic;
+    }
+
+    html, body {
+      font-family: 'Nunito', sans-serif;
+      line-height: 1.6;
+    }
+
+    /* Custom Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      background: #e5e7eb; /* gray-200 */
+      border-radius: 4px;
+      outline: none;
+      transition: background 0.3s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #1e3a8a; /* blue-900 */
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      transition: background 0.3s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background: #2563eb; /* blue-600 */
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      background: #1e3a8a; /* blue-900 */
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      transition: background 0.3s;
+    }
+
+    input[type="range"]::-moz-range-thumb:hover {
+      background: #2563eb; /* blue-600 */
+    }
+  </style>
+</head>
+<body class="bg-blue-50 text-black">
+  <!-- Navbar -->
+  <nav class="bg-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex-shrink-0">
+          <a href="/" class="text-2xl font-extrabold text-blue-900 tracking-tight">Birdy</a>
+        </div>
+        <div class="hidden md:flex space-x-8">
+          <a href="#home" class="text-blue-900 hover:text-blue-600 font-semibold text-lg">Home</a>
+          <a href="#features" class="text-blue-900 hover:text-blue-600 font-semibold text-lg">Features</a>
+          <a href="#faq" class="text-blue-900 hover:text-blue-600 font-semibold text-lg">FAQ</a>
+          <a href="#contact" class="text-blue-900 hover:text-blue-600 font-semibold text-lg">Contact</a>
+        </div>
+        <div class="md:hidden">
+          <button id="menu-toggle" class="text-blue-900 focus:outline-none">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden bg-white shadow-md">
+      <div class="px-4 pt-2 pb-3 space-y-1">
+        <a href="#home" class="block text-blue-900 hover:text-blue-600 font-semibold text-lg">Home</a>
+        <a href="#features" class="block text-blue-900 hover:text-blue-600 font-semibold text-lg">Features</a>
+        <a href="#faq" class="block text-blue-900 hover:text-blue-600 font-semibold text-lg">FAQ</a>
+        <a href="#contact" class="block text-blue-900 hover:text-blue-600 font-semibold text-lg">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <section class="py-12 sm:py-20 bg-gradient-to-r from-blue-100 to-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white p-8 rounded-xl shadow-2xl">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-8 text-center">Compare Your Earnings</h1>
+
+        <div class="flex flex-col sm:flex-row sm:gap-6 mb-6">
+          <div class="slider-container flex-1 mb-6 sm:mb-0">
+            <label for="rides" class="block text-gray-600 font-semibold mb-2">Number of Rides per Week:</label>
+            <input type="range" id="rides" class="slider" min="1" max="1000" value="100">
+            <span id="rides-output" class="block text-lg font-semibold text-blue-600 mt-2">100 Rides</span>
+          </div>
+          <div class="slider-container flex-1">
+            <label for="fare" class="block text-gray-600 font-semibold mb-2">Average Fare per Ride ($):</label>
+            <input type="range" id="fare" class="slider" min="10" max="100" value="35">
+            <span id="fare-output" class="block text-lg font-semibold text-blue-600 mt-2">$35</span>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label for="insurance-cost" class="block text-gray-600 font-semibold mb-2">Extra Costs per Month ($):</label>
+          <input type="number" id="insurance-cost" class="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all duration-300 hover:border-purple-300" value="300" min="0" step="1">
+        </div>
+
+        <div class="flex flex-col sm:flex-row sm:gap-6 mb-6">
+          <div class="slider-container flex-1 mb-6 sm:mb-0">
+            <label for="service-fee" class="block text-gray-600 font-semibold mb-2">Platform Service Fee (%):</label>
+            <input type="range" id="service-fee" class="slider" min="0" max="5" value="1">
+            <span id="service-fee-output" class="block text-lg font-semibold text-blue-600 mt-2">2%</span>
+          </div>
+          <div class="slider-container flex-1">
+            <label for="uber-fee" class="block text-gray-600 font-semibold mb-2">Uber/Lyft Fee Percentage (%):</label>
+            <input type="range" id="uber-fee" class="slider" min="20" max="50" value="35">
+            <span id="uber-fee-output" class="block text-lg font-semibold text-blue-600 mt-2">35%</span>
+          </div>
+        </div>
+
+        <div class="text-center mb-6">
+          <p class="text-lg font-semibold text-gray-600">Total Earnings per Week:</p>
+          <p class="text-2xl font-bold text-blue-900"><span id="earnings">Calculating...</span></p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-between gap-6 mb-6 pt-6 border-t-2 border-gray-200">
+          <div class="text-center flex-1">
+            <h3 class="text-xl font-bold text-blue-900">With Birdy</h3>
+            <p class="text-lg font-semibold text-purple-700"><span id="us-earnings">Calculating...</span></p>
+          </div>
+          <div class="text-center flex-1">
+            <h3 class="text-xl font-bold text-blue-900">With Uber/Lyft</h3>
+            <p class="text-lg font-semibold text-gray-600"><span id="uber-earnings">Calculating...</span></p>
+          </div>
+        </div>
+
+        <div class="text-center mb-6">
+          <p class="text-lg font-semibold text-gray-600">You earn <span id="percent-difference" class="text-purple-700">Calculating...</span> more with Birdy.</p>
+        </div>
+
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-blue-900 mb-6 text-center">Compare Earnings Visually</h2>
+        <canvas id="earningsChart" class="w-full max-w-full sm:max-w-2xl mx-auto"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-2xl font-bold mb-4">Birdy</h3>
+          <p class="font-light text-lg">Your trusted birdy, just one tap away.</p>
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold mb-4">Quick Links</h3>
+          <ul class="space-y-2 font-light text-lg">
+            <li><a href="#home" class="hover:text-blue-300">Home</a></li>
+            <li><a href="#features" class="hover:text-blue-300">Features</a></li>
+            <li><a href="#faq" class="hover:text-blue-300">FAQ</a></li>
+            <li><a href="#contact" class="hover:text-blue-300">Contact</a></li>
+            <li><a href="/privacy" class="hover:text-blue-300">Privacy</a></li>
+            <li><a href="/Drivers" class="hover:text-blue-300">Drivers</a></li>
+            <li><a href="/Riders" class="hover:text-blue-300">Riders</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold mb-4">Contact Us</h3>
+          <p class="font-light text-lg">Email: support@Birdy.com</p>
+          <p class="font-light text-lg">Phone: (123) 456-7890</p>
+          <p class="font-light text-lg"></p>
+        </div>
+      </div>
+      <div class="mt-8 text-center">
+        <p class="font-light text-lg">© 2025 Birdy. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript (Unchanged) -->
+  <script>
+    // DOM Elements
+    const ridesInput = document.getElementById('rides');
+    const fareInput = document.getElementById('fare');
+    const insuranceCostInput = document.getElementById('insurance-cost');
+    const serviceFeeInput = document.getElementById('service-fee');
+    const uberFeeInput = document.getElementById('uber-fee');
+
+    const ridesOutput = document.getElementById('rides-output');
+    const fareOutput = document.getElementById('fare-output');
+    const serviceFeeOutput = document.getElementById('service-fee-output');
+    const uberFeeOutput = document.getElementById('uber-fee-output');
+    const earningsOutput = document.getElementById('earnings');
+    const usEarningsOutput = document.getElementById('us-earnings');
+    const uberEarningsOutput = document.getElementById('uber-earnings');
+    const percentDiffOutput = document.getElementById('percent-difference');
+    const earningsChart = document.getElementById('earningsChart').getContext('2d');
+
+    // Create the Chart.js chart
+    const chart = new Chart(earningsChart, {
+        type: 'bar',
+        data: {
+            labels: ['With Birdy', 'With Uber/Lyft'],
+            datasets: [{
+                label: 'Weekly Earnings',
+                data: [0, 0], // Initial placeholder data, will be updated dynamically
+                backgroundColor: ['#6b7280', '#1e3a8a'], // gray-500, blue-900
+                borderColor: ['#4b5563', '#1e40af'], // gray-600, blue-800
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: '#e5e7eb' // gray-200
+                    },
+                    ticks: {
+                        color: '#1f2937' // gray-800
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#1f2937' // gray-800
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#1f2937' // gray-800
+                    }
+                }
+            }
+        }
+    });
+
+    // Calculate Earnings
+    function calculateEarnings() {
+        const ridesPerWeek = parseInt(ridesInput.value);
+        const farePerRide = parseFloat(fareInput.value);
+        const insuranceCost = parseFloat(insuranceCostInput.value);
+        const serviceFeePercentage = parseFloat(serviceFeeInput.value) / 100;
+        const uberFeePercentage = parseFloat(uberFeeInput.value) / 100;
+
+        // Calculate Total Earnings
+        const totalEarnings = ridesPerWeek * farePerRide;
+        const earningsAfterUberFee = totalEarnings * (1 - uberFeePercentage) - insuranceCost;
+        const earningsAfterUsFee = totalEarnings * (1 - serviceFeePercentage) - insuranceCost;
+
+        // Update Outputs
+        ridesOutput.textContent = `${ridesPerWeek} Rides`;
+        fareOutput.textContent = `$${farePerRide}`;
+        serviceFeeOutput.textContent = `${parseInt(serviceFeeInput.value)}%`;
+        uberFeeOutput.textContent = `${parseInt(uberFeeInput.value)}%`;
+        earningsOutput.textContent = `$${(totalEarnings - insuranceCost).toFixed(2)} (before fees)`;
+        usEarningsOutput.textContent = `$${earningsAfterUsFee.toFixed(2)} (after Birdy fee)`;
+        uberEarningsOutput.textContent = `$${earningsAfterUberFee.toFixed(2)} (after Uber/Lyft fee)`;
+
+        // Calculate and display percent difference
+        const percentDifference = ((earningsAfterUsFee - earningsAfterUberFee) / earningsAfterUberFee) * 100;
+        percentDiffOutput.textContent = `${percentDifference.toFixed(1)}%`;
+
+        // Update the Chart
+        chart.data.datasets[0].data = [earningsAfterUsFee, earningsAfterUberFee];
+        chart.update();
+    }
+
+    // Event Listeners
+    ridesInput.addEventListener('input', calculateEarnings);
+    fareInput.addEventListener('input', calculateEarnings);
+    insuranceCostInput.addEventListener('input', calculateEarnings);
+    serviceFeeInput.addEventListener('input', calculateEarnings);
+    uberFeeInput.addEventListener('input', calculateEarnings);
+
+    // Initial Calculation
+    calculateEarnings();
+
+    // Mobile Menu Toggle
+    document.getElementById('menu-toggle').addEventListener('click', () => {
+      const mobileMenu = document.getElementById('mobile-menu');
+      mobileMenu.classList.toggle('hidden');
+    });
+  </script>
+</body>
+</html>
